@@ -1,0 +1,270 @@
+
+// public
+enum MsgType {
+	MAIL_ON_REQ = 1;	
+	MAIL_ON_RSP = 2;
+	MAIL_OFF_REQ = 3;	
+	MAIL_OFF_RSP = 4;	
+	MAIL_UPDATE_REQ = 5;	
+	MAIL_UPDATE_RSP = 6;	
+	MAIL_STATUS_REQ = 7;	
+	MAIL_STATUS_RSP = 8;	
+
+	JOB_ON_REQ = 12;
+	JOB_ON_RSP = 13;
+	JOB_OFF_REQ = 14;
+	JOB_OFF_RSP = 15;	
+	JOB_UPDATE_REQ = 16;	
+	JOB_UPDATE_RSP = 17;	
+	JOB_STATUS_REQ = 18;	
+	JOB_STATUS_RSP = 19;	
+	JOB_LIST_REQ = 20;
+	JOB_LIST_RSP = 21;	
+
+	WORKER_LIST_REQ = 30;
+	WORKER_LIST_RSP = 31;
+	WORKER_STATUS_REQ = 32;
+	WORKER_STATUS_RSP = 33;
+	WORKER_OFF_REQ = 34;
+
+	MAIL_ALTER_REQ = 40;
+	MAIL_ALTER_RSP = 41;
+
+	TASK_ASSIGN_REQ = 50;
+	TASK_ASSIGN_RSP = 51;
+
+	SCHEDULER_OFF_REQ = 60;
+}
+
+message MsgHeader {
+	required MsgType type = 1;
+	required string source = 2;
+	required string dest = 3;
+	required string feedback = 4;
+}
+
+// scheduler <---> shell
+message MailOnReq {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+	required string alias = 3;
+	required string password = 4;
+	required string smtpHost = 5;
+	required string smtpPort = 6;
+	required bool useSsl = 7;
+}
+
+message MailOnRsp {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+}
+
+message MailOffReq {
+	required MsgHeader header = 1;
+	required string account = 2;
+}
+
+message MailOffRsp {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+}
+
+message MailUpdateReq {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+	optional string alias = 3;
+	optional string password = 4;
+	optional string smtpHost = 5;
+	optional string smtpPort = 6;
+	optional bool useSsl = 7;
+}
+
+message MailUpdateRsp {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+}
+
+message MailStatusReq {
+	required MsgHeader header = 1;
+	required string account = 2;
+}
+
+message MailStatusRsp {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+
+	required string alias = 5;
+	required string password = 6;
+	required string smtpHost = 7;
+	required string smtpPort = 8;
+	required bool useSsl = 9;
+	optional int32 status = 10;
+}
+
+message JobOnReq {
+	required MsgHeader header = 1;
+
+	required string owner = 2;
+	repeated string senderAccounts = 3;
+	repeated string toAccounts = 4;
+	required bytes mailData = 5;
+}
+
+message JobOnRsp {
+	required MsgHeader header = 1;
+
+	required int32 code = 2;
+	optional string reason = 3;
+
+	optional string jobId = 4;
+}
+
+message JobUpdateReq {
+	required MsgHeader header = 1;
+
+	required string jobId = 2;
+	repeated string senderAccounts = 3;
+	repeated string toAccounts = 4;
+	optional bytes mailData = 5;
+	optional string owner = 6;
+}
+
+message JobUpdateRsp {
+	required MsgHeader header = 1;
+
+	required string jobId = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+
+}
+
+message JobOffReq {
+	required MsgHeader header = 1;
+
+	required string jobId = 2;
+}
+
+message JobOffRsp {
+	required MsgHeader header = 1;
+
+	required string jobId = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+}
+
+message JobStatusReq {
+	required MsgHeader header = 1;
+
+	required string jobId = 2;
+}
+
+message JobStatusRsp {
+	required MsgHeader header = 1;
+
+	required string jobId = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+
+	optional int32 completedNum = 5;
+	optional int32 successNum = 6;
+	optional int32 totalNum = 7;
+}
+
+message JobListReq {
+	required MsgHeader header = 1;
+}
+
+message JobListRsp {
+	required MsgHeader header = 1;
+
+	repeated string jobList = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+}
+
+message WorkerListReq {
+	required MsgHeader header = 1;
+}
+
+message WorkerListRsp {
+	required MsgHeader header = 1;
+
+	required int32 code = 2;
+	optional string reason = 3;
+
+	repeated string workers = 4;
+}
+
+message WorkeStatusReq {
+	required MsgHeader header =1 ;
+
+	required string workerId = 2;
+}
+
+message WorkeStatusRsp {
+	required MsgHeader header = 1;
+
+	required int32 code = 2;
+	optional string reason = 3;
+	required string workerId = 4;
+
+	optional int32 status = 5;
+}
+
+message SchedulerOffReq {
+	required MsgHeader header = 1;
+}
+
+// shell <---> scheduler <---> worker
+message WorkerOffReq {
+	required MsgHeader header = 1;
+
+	required string workerId = 2;
+}
+
+
+// scheduler <---> worker
+// 更新worker的工作邮箱
+message MailAlterReq {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+}
+
+message MailAlterRsp {
+	required MsgHeader header = 1;
+
+	required string account = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+}
+
+message TaskAssignReq {
+	required MsgHeader header = 1;
+
+	required string taskId = 2;
+	required string jobId = 3;
+}
+
+message TaskAssignRsp {
+	required MsgHeader header = 1;
+
+	required string taskId = 2;
+	required int32 code = 3;
+	optional string reason = 4;
+}
+
