@@ -9,10 +9,11 @@
 '''
 
 import sys
-sys.path.insert(0, "./")
-sys.path.insert(0, "../")
-sys.path.insert(0, "../common")
-sys.path.insert(0, "../clients")
+file_dir = sys.path[0]
+sys.path.insert(0, file_dir + "/./")
+sys.path.insert(0, file_dir + "/../")
+sys.path.insert(0, file_dir + "/../common")
+sys.path.insert(0, file_dir + "/../clients")
 reload(sys)
 
 import threading

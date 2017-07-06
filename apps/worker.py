@@ -9,10 +9,11 @@
 '''
 
 import sys
-sys.path.insert(0, "./")
-sys.path.insert(0, "../")
-sys.path.insert(0, "../clients")
-sys.path.insert(0, "../common")
+file_dir = sys.path[0]
+sys.path.insert(0, file_dir + "/./")
+sys.path.insert(0, file_dir + "/../")
+sys.path.insert(0, file_dir + "/../clients")
+sys.path.insert(0, file_dir + "/../common")
 
 import threading
 import time

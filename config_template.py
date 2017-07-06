@@ -6,9 +6,9 @@ global_config = {
 	"scheduler": {
 		"msg_channel": {
 			"scheme": "redis://localhost:6379:1",
-			"channel_name": "scheduler_msg_chn"
+			"channel_name": ""
 		},
-		"logpath": "./ms_logs"
+		"logpath": "/tmp/ms_logs"
 	},
 
 	# worker配置
@@ -18,7 +18,7 @@ global_config = {
 			"channel_name": ""
 		},
 		"nodeId": "1",
-		"logpath": "./ms_logs"
+		"logpath": "/tmp/ms_logs"
 	},
 
 	# job管理配置

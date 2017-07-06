@@ -8,10 +8,14 @@
 '''
 
 import sys
-sys.path.insert(0, "../")
-sys.path.insert(0, "./")
-sys.path.insert(0, "../clients")
+file_dir = sys.path[0]
+
+sys.path.insert(0, file_dir + "/../")
+sys.path.insert(0, file_dir + "/./")
+sys.path.insert(0, file_dir + "/../clients")
+sys.path.insert(0, file_dir + "/../common")
 reload(sys)
+
 
 import threading
 import uuid
@@ -58,7 +62,6 @@ class Scheduler(threading.Thread):
 
 		# 节点管理信息
 		self.node_client = NodeClient(self.config["node_config"])
-		self.node_client.sync_node(self.node_info)
 
 		# 20170706 检查是否已经有scheduler节点启动
 		q_node_info = self.node_client.get_node_info("scheduler:%s" %(self.config["worker"]["nodeId"]))
@@ -66,6 +69,8 @@ class Scheduler(threading.Thread):
 			err_msg =  "已经有scheduler在%s启动" %(q_node_info.info["ip"])
 			print err_msg
 			raise Exception(err_msg)
+
+		self.node_client.sync_node(self.node_info)
 
 		# 节点消息通道
 		self.msg_cli = MsgClient(**{
@@ -132,7 +137,7 @@ class Scheduler(threading.Thread):
 				"msg_data": base64.b64encode(req.SerializeToString())
 			})
 
-			worker_msg_cli = self.get_worker_msgcli(worker_id)
+			worker_msg_cli = self.get_worker_msgcli(req.workerId)
 			if worker_msg_cli is not None:
 				worker_msg_cli.send_msg(msg_data)
 
